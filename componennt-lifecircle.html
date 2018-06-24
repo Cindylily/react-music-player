@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>change panel color</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+    <!--react library &reactDom-->
+    <script src="https://unpkg.com/react@15.4.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.4.2/dist/react-dom.js"></script>
+    <style type="text/css">
+        #container{
+            padding: 50px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<script type="text/babel">
+    var destination = document.querySelector("#container");
+
+    var Counter = React.createClass({
+
+        componentWillReceiveProps:function (newProps) {
+            console.log("componentWillReceiveProps:component will receive new props");
+            return;
+        },
+
+        shouldComponentUpdate:function (newPros,newState) {
+            console.log("shouldComponentUpdate:should counter update");
+            return true;
+        },
+
+        componentWillUpdate:function () {
+            console.log("componentWillUpdate:counter will update");
+
+            return true;
+        },
+
+        componentDidUpdate:function () {
+            console.log("componentDidUpdate:counter did update");
+
+            return;
+        },
+
+        render:function () {
+          var textStyle = {
+              fontSize:72,
+              fontFamily:"sans-serif",
+              color:"#333",
+              fontWeight:"bold"
+          };
+          
+          return(
+                  <div style={textStyle}>
+                      {this.props.display}
+                  </div>
+          )
+        }
+    });
+
+    var CounterParent = React.createClass({
+        getDefaultProps:function () {
+            console.log("getDefaultProps:receive props from outsize");
+
+            //like this.props
+            return {};
+        },
+
+        getInitialState:function () {
+            console.log("getInitialState:set defaule state object");
+
+            //like this.state
+            return {
+                count:0
+            };
+        },
+
+        componentWillMount:function () {
+            console.log("componentWillMount:component will about to mount");
+
+            return;
+        },
+
+        componentDidMount:function () {
+            console.log("componentDidMount:component did mount");
+
+            return;
+        },
+
+        increase:function () {
+            this.setState({
+                count:this.state.count+1
+            });
+        },
+
+        shouldComponentUpdate:function (newPros,newState) {
+            console.log("shouldComponentUpdate:should component update");
+            if(newState.count < 5){
+                console.log("component should update");
+                //must be returned
+                return true;
+            }else{
+                console.log("component should not update");
+                ReactDOM.unmountComponentAtNode(destination);
+                return false;
+            }
+        },
+
+        componentWillUnmount:function () {
+            console.log("componentWillUnmount:component will be removed from dom");
+            return;
+        },
+
+        componentWillUpdate:function () {
+            console.log("componentWillUpdate:component is about to update");
+            return;
+        },
+
+        componentDidUpdate:function () {
+            console.log("componentDidUpdate:component is just updated");
+            return;
+        },
+
+        render:function () {
+            var backgroundStyle = {
+                padding:50,
+                border:"#333 2px dotted",
+                width:250,
+                height:100,
+                borderRadius:10,
+                textAlign:"center"
+            };
+
+            return(
+                <div style={backgroundStyle}>
+                    <Counter display={this.state.count}/>
+                    <button onClick={this.increase}>
+                        +
+                    </button>
+                </div>
+            );
+        }
+    });
+    ReactDOM.render(
+            <div>
+                <CounterParent/>
+            </div>,
+            destination
+    );
+</script>
+</body>
+</html>
